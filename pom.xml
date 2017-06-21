@@ -1,0 +1,172 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.rb.rpi</groupId>
+	<artifactId>rpi-mqtt</artifactId>
+	<version>0.1</version>
+	<packaging>jar</packaging>
+
+	<name>rpi-mqtt</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<!-- Generic properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<compiler.version>3.1</compiler.version>
+		<!-- Versions -->
+		<junit.version>4.12</junit.version>
+		<log4j.version>1.2.17</log4j.version>
+		<logback.version>1.1.8</logback.version>
+		<jodd.version>3.8.6</jodd.version>
+		<p4j.version>1.1</p4j.version>
+		<paho.version>1.1.1</paho.version>
+		<!-- JAR -->
+		<jar.lib>lib</jar.lib>
+		<jar.main>org.rb.rpi.RpiHrwMain</jar.main>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Logger -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<!-- http://pi4j.com/ -->
+		<dependency>
+			<groupId>com.pi4j</groupId>
+			<artifactId>pi4j-core</artifactId>
+			<version>${p4j.version}</version>
+		</dependency>
+		<!-- http://jodd.org/ -->
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-core</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-db</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-bean</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-http</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-json</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-log</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-petite</artifactId>
+			<version>${jodd.version}</version>
+		</dependency>
+		<!-- http://www.eclipse.org/paho/clients/java/ -->
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>${paho.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/${jar.lib}</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>${jar.lib}/</classpathPrefix>
+							<mainClass>${jar.main}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/etc</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/script</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
