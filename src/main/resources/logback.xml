@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<property name="module" value="mqtt"></property>
+	<property name="org.rb.rpi.log" value="${java.io.tmpdir}"></property>
+	<property resource="org/rb/rpi/rpi-mqtt.properties" />
+	<property file="${org.rb.rpi.log}" />
+
+	<appender name="LOG-TRACE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-trace.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOG-DOMAIN"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-domain.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOG-DRIVER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-driver.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+	<appender name="LOG-MODEL"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-model.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOG-REPOSITORY"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-repository.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOG-SERVICE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-service.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="LOG-XML"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{ISO8601} [%t] %c - %m%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${org.rb.rpi.log}rpi-${module}-xml.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="org.rb.rpi">
+		<level value="TRACE" />
+		<appender-ref ref="LOG-TRACE" />
+	</logger>
+	<logger name="org.rb.rpi.domain">
+		<level value="DEBUG" />
+		<appender-ref ref="LOG-DOMAIN" />
+	</logger>
+	<logger name="org.rb.rpi.driver">
+		<level value="DEBUG" />
+		<appender-ref ref="LOG-DRIVER" />
+	</logger>
+	<logger name="org.rb.rpi.model">
+		<level value="TRACE" />
+		<appender-ref ref="LOG-MODEL" />
+	</logger>
+	<logger name="org.rb.rpi.repository">
+		<level value="DEBUG" />
+		<appender-ref ref="LOG-REPOSITORY" />
+	</logger>
+	<logger name="org.rb.rpi.service">
+		<level value="TRACE" />
+		<appender-ref ref="LOG-SERVICE" />
+	</logger>
+	<logger name="org.rb.rpi.xml">
+		<level value="DEBUG" />
+		<appender-ref ref="LOG-XML" />
+	</logger>
+
+	<root>
+		<level value="TRACE" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+	
+</configuration>

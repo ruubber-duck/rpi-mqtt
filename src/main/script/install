@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cp /opt/rpi-mqtt/etc/rpi-mqtt /etc/init.d/
+chown root:root /etc/init.d/rpi-mqtt
+chmod a+x /etc/init.d/rpi-mqtt
+systemctl daemon-reload

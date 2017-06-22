@@ -25,7 +25,7 @@
 		<paho.version>1.1.1</paho.version>
 		<!-- JAR -->
 		<jar.lib>lib</jar.lib>
-		<jar.main>org.rb.rpi.RpiHrwMain</jar.main>
+		<jar.main>org.rb.rpi.RpiMqttMain</jar.main>
 	</properties>
 
 	<dependencies>

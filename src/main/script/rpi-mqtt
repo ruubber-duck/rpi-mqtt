@@ -1,0 +1,146 @@
+#!/bin/sh
+#
+# /etc/init.d/rpi-mqtt -- startup script for the rpi-mqtt client.
+#
+### BEGIN INIT INFO
+# Provides:          rpi-mqtt
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Should-Start:      $named
+# Should-Stop:       $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start rpi-mqtt.
+# Description:       Start the rpi-mqtt client.
+### END INIT INFO
+
+set -e
+
+# Define required variables
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=rpi-mqtt
+DESC="Client rpi-mqtt"
+JVM_TMP=/tmp/$NAME-tmp
+RPI_HOME=/opt/$NAME
+RPI_JAR=rpi-mqtt-0.1.jar
+RPI_PID="/var/run/$NAME.pid"
+
+. /lib/lsb/init-functions
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script"
+	exit 1
+fi
+
+# Default Java options
+if [ -z "$JAVA_OPTS" ]; then
+	JAVA_OPTS="-Xms16M -Xmx64M"
+fi
+
+if [ ! -f "$RPI_HOME/$RPI_JAR" ]; then
+	log_failure_msg "$NAME is not installed"
+	exit 1
+fi
+
+
+rpi_hrw_init() {
+	# Escape any double quotes in the value of JAVA_OPTS
+	JAVA_OPTS="$(echo $JAVA_OPTS | sed 's/\"/\\\"/g')"
+
+	# Define the command to run Tomcat's catalina.sh as a daemon
+	# set -a tells sh to export assigned variables to spawned shells.
+	EMV_VARS="set -a; JAVA_HOME=\"$JAVA_HOME\"; \
+		RPI_HOME=\"$RPI_HOME\"; \
+		JAVA_OPTS=\"$JAVA_OPTS\"; \
+		RPI_PID=\"$RPI_PID\"; \
+		LANG=\"$LANG\"; \
+		$@"
+
+	start-stop-daemon --start --background --verbose --make-pidfile \
+		--pidfile "$RPI_PID" \
+		--exec "/usr/bin/java" -- $JAVA_OPTS \
+		 -Dpi4j.debug \
+		 -Dpi4j.linking=dynamic \
+		 -Dorg.rb.rpi.service.MqttService.login=$RPI_MQTT_LOGIN \
+		 -Dorg.rb.rpi.service.MqttService.password=$RPI_MQTT_PASSWORD \
+		 -Dorg.rb.rpi.service.MqttService.rootTopic=$RPI_MQTT_ROOT \
+		 -jar "$RPI_HOME/$RPI_JAR"
+
+	status="$?"
+	set +a -e
+	return $status
+}
+
+case "$1" in
+  start)
+	log_daemon_msg "Starting $DESC" "$NAME"
+	
+	if [ ! -f "$RPI_PID" ]; then
+		rpi_hrw_init
+		log_end_msg 0
+	else
+	    log_progress_msg "(already running)"
+		log_end_msg 0
+	fi
+	;;
+  stop)
+	log_daemon_msg "Stopping $DESC" "$NAME"
+
+	set +e
+	if [ -f "$RPI_PID" ]; then 
+		start-stop-daemon --stop --pidfile "$RPI_PID" \
+			--retry=TERM/20/KILL/5 >/dev/null
+		if [ $? -eq 1 ]; then
+			log_progress_msg "$DESC is not running but pid file exists, cleaning up"
+		elif [ $? -eq 3 ]; then
+			PID="`cat $RPI_PID`"
+			log_failure_msg "Failed to stop $NAME (pid $PID)"
+			exit 1
+		fi
+		rm -f "$RPI_PID"
+	else
+		log_progress_msg "(not running)"
+	fi
+	log_end_msg 0
+	set -e
+	;;
+   status)
+	set +e
+	start-stop-daemon --test --start --pidfile "$RPI_PID" \
+		--user $RPI_HRW_USER --exec "/usr/bin/java" \
+		>/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+
+		if [ -f "$RPI_PID" ]; then
+		    log_success_msg "$DESC is not running, but pid file exists."
+			exit 1
+		else
+		    log_success_msg "$DESC is not running."
+			exit 3
+		fi
+	else
+		log_success_msg "$DESC is running with pid `cat $RPI_PID`"
+	fi
+	set -e
+        ;;
+  restart|force-reload)
+	if [ -f "$RPI_PID" ]; then
+		$0 stop
+		sleep 2
+	fi
+	$0 start
+	;;
+  try-restart)
+        if start-stop-daemon --test --start --pidfile "$RPI_PID" \
+		--user $RPI_HRW_USER --exec "/usr/bin/java" \
+		>/dev/null; then
+		$0 start
+	fi
+        ;;
+  *)
+	log_success_msg "Usage: $0 {start|stop|restart|try-restart|force-reload|status}"
+	exit 1
+	;;
+esac
+
+exit 0

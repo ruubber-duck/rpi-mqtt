@@ -1,0 +1,23 @@
+#
+# Properties for 'rpi-mqtt' module.  
+#
+
+[org.rb.rpi.model]
+LightLamp.sid = 0
+WaterPump.pin = 2
+WaterLevel.pin = 3
+
+[org.rb.rpi.model]
+LightLamp.sid = Light/Lamp
+LightSensor.sid = Light/Sensor
+WaterPump.sid = Water/Pump
+WaterLevel.sid = Water/Level
+WaterPumpMsg.sid = Water/Pump/Msg
+
+[org.rb.rpi.service]
+MqttService.brokerHost = mqtt.dioty.co
+MqttService.brokerPort = 1883
+MqttService.brokerPortSecure = 8883
+MqttService.wsPort = 8080
+MqttService.wsPortSecure = 8880
+MqttService.clientId = RpiB+
